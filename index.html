@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hala Madrid · opacité dynamique</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&family=Montserrat:wght@400;500;600&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* ===== RESET ===== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      background: radial-gradient(circle at 30% 30%, #0b1a30, #020617);
+      font-family: 'Poppins', 'Montserrat', 'Inter', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .futuristic-card {
+      max-width: 500px;
+      width: 100%;
+      background: rgba(6, 18, 30, 0.8);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid #8B0000;
+      border-radius: 48px;
+      padding: 2.2rem 2rem;
+      box-shadow: none;
+    }
+
+    /* ===== TITRE PRINCIPAL ===== */
+    .main-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      margin-bottom: 2.2rem;
+    }
+
+    .main-header h1 {
+      font-size: 2.4rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      color: white;
+      margin: 0;
+    }
+
+    .glow-icon {
+      font-size: 2.2rem;
+      color: #ffaa33;
+      filter: none;
+    }
+
+    /* ===== LABELS ===== */
+    .section-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #bbdbff;
+    }
+
+    .section-label i {
+      font-size: 1rem;
+      color: #8B0000;
+    }
+
+    /* ===== STYLE DE BASE POUR LES INPUTS ===== */
+    .input-futuristic {
+      background: rgba(0, 20, 35, 0.8);
+      border: 2px solid #8B0000;
+      border-radius: 20px;
+      color: white;
+      font-family: 'Montserrat', monospace;
+      font-size: 2rem;
+      font-weight: 500;
+      text-align: center;
+      padding: 0.6rem 0.2rem;
+      width: 100%;
+      outline: none;
+      box-shadow: none;
+      transition: opacity 0.2s ease;
+      /* Opacité de base : elle sera contrôlée par une classe */
+    }
+
+    /* Valeur par défaut : semi-transparente */
+    .input-futuristic.default-value {
+      opacity: 0.3;
+    }
+
+    /* Lorsque l'utilisateur a modifié (classe retirée) ou au focus, on repasse à opaque */
+    .input-futuristic:focus {
+      opacity: 1 !important;
+      border-color: #b30000;
+    }
+
+    /* Style spécifique pour les inputs dans les time-blocks */
+    .time-block input {
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid #8B0000;
+      width: 80%;
+      font-size: 2.2rem;
+      font-weight: 500;
+      color: white;
+      text-align: center;
+      font-family: 'Inter', monospace;
+      outline: none;
+      padding: 0.2rem 0;
+      box-shadow: none;
+      transition: opacity 0.2s ease;
+    }
+
+    /* Valeur par défaut pour les petits champs */
+    .time-block input.default-value {
+      opacity: 0.3;
+    }
+
+    .time-block input:focus {
+      opacity: 1 !important;
+      border-bottom-color: #b30000;
+    }
+
+    .depart-input {
+      font-size: 2.2rem;
+      letter-spacing: 6px;
+      padding: 0.8rem 0.2rem;
+      margin-bottom: 1rem;
+    }
+
+    /* ===== TROIS BLOCS ===== */
+    .triple-grid {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin: 1.8rem 0 2.2rem 0;
+    }
+
+    .time-block {
+      flex: 1;
+      background: rgba(0, 20, 40, 0.6);
+      backdrop-filter: blur(4px);
+      border: 2px solid #8B0000;
+      border-radius: 20px;
+      padding: 1rem 0.5rem;
+      text-align: center;
+      box-shadow: none;
+    }
+
+    .champ-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #FFA500;
+      margin-top: 8px;
+      font-weight: 400;
+    }
+
+    .champ-souslabel {
+      font-size: 0.65rem;
+      color: #FFA500;
+      margin-top: -2px;
+      opacity: 0.9;
+      letter-spacing: 1px;
+    }
+
+    /* ===== HEURE FINALE ===== */
+    .finale-digits {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: rgba(0, 10, 20, 0.6);
+      border-radius: 40px;
+      padding: 1rem 1.5rem;
+      border: 2px solid #8B0000;
+      box-shadow: none;
+      backdrop-filter: blur(5px);
+    }
+
+    .digit-box {
+      font-size: 2.8rem;
+      font-weight: 500;
+      color: white;
+      min-width: 70px;
+      text-align: center;
+      font-family: 'Montserrat', monospace;
+      letter-spacing: 5px;
+    }
+
+    .separator {
+      font-size: 3rem;
+      color: #8B0000;
+      line-height: 1;
+      margin: 0 5px;
+    }
+
+    /* ===== BOUTON ===== */
+    .btn-calculer {
+      background: rgba(100, 0, 0, 0.3);
+      border: 2px solid #8B0000;
+      color: white;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 1.3rem;
+      font-weight: 600;
+      letter-spacing: 3px;
+      padding: 0.9rem 1.8rem;
+      border-radius: 40px;
+      width: 100%;
+      margin: 2rem 0 1.2rem 0;
+      backdrop-filter: blur(6px);
+      cursor: pointer;
+      text-transform: uppercase;
+      box-shadow: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .btn-calculer:hover {
+      background: rgba(150, 0, 0, 0.5);
+      border-color: #b30000;
+    }
+
+    /* ===== HISTORIQUE ===== */
+    .historique-section {
+      margin-top: 1.8rem;
+    }
+
+    .historique-list {
+      background: rgba(0, 15, 28, 0.6);
+      backdrop-filter: blur(4px);
+      border: 2px solid #8B0000;
+      border-radius: 28px;
+      padding: 1rem 1rem;
+      min-height: 110px;
+      box-shadow: none;
+      max-height: 180px;
+      overflow-y: auto;
+    }
+
+    .empty-histoire {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 80px;
+      color: #8a9fb0;
+      font-style: italic;
+      letter-spacing: 1px;
+      gap: 10px;
+    }
+
+    .historique-item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.5rem 0.8rem;
+      border-bottom: 1px solid #8B0000;
+      font-family: 'Inter', monospace;
+      font-size: 1.2rem;
+      color: #28A745;
+      font-weight: 500;
+    }
+
+    .historique-item:last-child {
+      border-bottom: none;
+    }
+
+    .historique-time {
+      background: transparent;
+      border: none;
+      padding: 0.2rem 0.8rem;
+      font-size: 1.2rem;
+      letter-spacing: 2px;
+    }
+
+    hr {
+      border: 0.5px solid #8B0000;
+      margin: 18px 0 10px 0;
+      width: 60%;
+      margin-left: auto;
+      margin-right: auto;
+      box-shadow: none;
+    }
+
+    .deco-dots {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 1rem;
+      gap: 6px;
+    }
+    .deco-dots span {
+      width: 6px;
+      height: 6px;
+      background: #8B0000;
+      border-radius: 50%;
+    }
+
+    @media (max-width: 420px) {
+      .futuristic-card { padding: 1.5rem 1.2rem; }
+      .main-header h1 { font-size: 2rem; }
+      .glow-icon { font-size: 1.8rem; }
+      .depart-input { font-size: 1.8rem; letter-spacing: 3px; }
+      .triple-grid { gap: 0.5rem; }
+      .time-block input { font-size: 1.8rem; }
+      .digit-box { font-size: 2.2rem; min-width: 55px; }
+      .separator { font-size: 2.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="futuristic-card">
+    <div class="main-header">
+      <span class="glow-icon"><i class="fa-solid fa-star"></i></span>
+      <h1>Hala Madrid</h1>
+      <span class="glow-icon" style="opacity: 0.4;"><i class="fa-regular fa-star"></i></span>
+    </div>
+
+    <!-- HEURE DE DÉPART -->
+    <div class="depart-section">
+      <div class="section-label">
+        <i class="fa-regular fa-clock"></i>
+        <span>HEURE DE DÉPART</span>
+        <i class="fa-regular fa-pen-to-square" style="margin-left: auto; color: #8B0000;"></i>
+      </div>
+      <input type="text" class="input-futuristic depart-input default-value" id="departInput" value="21:47:32" placeholder="HH:MM:SS" maxlength="8">
+    </div>
+
+    <!-- CHAMPS 1,2,3 -->
+    <div class="triple-grid">
+      <div class="time-block">
+        <input type="text" id="champ1" class="default-value" value="0A" placeholder="ex: 0A">
+        <div class="champ-label">CHAMP 1 <span class="champ-souslabel">(Hex)</span></div>
+      </div>
+      <div class="time-block">
+        <input type="text" id="champ2" class="default-value" value="10" placeholder="ex: 10">
+        <div class="champ-label">CHAMP 2 <span class="champ-souslabel">(Décimal)</span></div>
+      </div>
+      <div class="time-block">
+        <input type="text" id="champ3" class="default-value" value="08" placeholder="secondes">
+        <div class="champ-label">CHAMP 3 <span class="champ-souslabel"></span></div>
+      </div>
+    </div>
+
+    <!-- HEURE FINALE -->
+    <div class="finale-container">
+      <div class="section-label">
+        <i class="fa-regular fa-sun"></i>
+        <span>HEURE FINALE</span>
+        <i class="fa-regular fa-sparkles" style="margin-left: auto; color:#8B0000;"></i>
+      </div>
+      <div class="finale-digits" id="finaleDisplay">
+        <span class="digit-box" id="finalH">21</span>
+        <span class="separator">:</span>
+        <span class="digit-box" id="finalM">47</span>
+        <span class="separator">:</span>
+        <span class="digit-box" id="finalS">32</span>
+      </div>
+      <hr>
+    </div>
+
+    <!-- BOUTON CALCULER -->
+    <button class="btn-calculer" id="calculBtn">
+      <i class="fa-regular fa-calculator"></i> CALCULER
+      <i class="fa-regular fa-arrow-right"></i>
+    </button>
+
+    <!-- HISTORIQUE -->
+    <div class="historique-section">
+      <div class="section-label">
+        <i class="fa-regular fa-clock"></i>
+        <span>HISTORIQUE</span>
+        <i class="fa-regular fa-bookmark" style="margin-left: auto; color:#8B0000;"></i>
+      </div>
+      <div class="historique-list" id="historiqueContainer">
+        <div class="empty-histoire" id="emptyHistoryMsg">
+          <i class="fa-regular fa-minus"></i> Aucun calcul
+        </div>
+      </div>
+    </div>
+
+    <div class="deco-dots">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      // DOM elements
+      const departInput = document.getElementById('departInput');
+      const champ1 = document.getElementById('champ1');
+      const champ2 = document.getElementById('champ2');
+      const champ3 = document.getElementById('champ3');
+      const finalH = document.getElementById('finalH');
+      const finalM = document.getElementById('finalM');
+      const finalS = document.getElementById('finalS');
+      const calculBtn = document.getElementById('calculBtn');
+      const historiqueContainer = document.getElementById('historiqueContainer');
+      const emptyMsg = document.getElementById('emptyHistoryMsg');
+
+      // Récupère tous les inputs modifiables
+      const allInputs = [departInput, champ1, champ2, champ3];
+
+      // Fonction pour enlever la classe 'default-value' et rendre opaque
+      function markAsEdited(input) {
+        if (input.classList.contains('default-value')) {
+          input.classList.remove('default-value');
+        }
+      }
+
+      // Au focus : on considère que l'utilisateur va modifier -> enlève la classe
+      allInputs.forEach(input => {
+        input.addEventListener('focus', function() {
+          markAsEdited(this);
+        });
+
+        // Si l'utilisateur tape, on enlève aussi (sécurité)
+        input.addEventListener('input', function() {
+          markAsEdited(this);
+        });
+
+        // On conserve la valeur par défaut au départ, mais si la valeur change par programme, on veut peut-être adapter ?
+        // On initialise avec la classe présente dans le HTML (déjà fait)
+      });
+
+      // Pour que le clic sur le bouton ne déclenche pas un blur intempestif
+      // Rien de spécial
+
+      // Conversion hexa -> décimal
+      function hexToDecimal(hexStr) {
+        let clean = hexStr.trim().replace(/^0x/i, '');
+        if (!/^[0-9A-Fa-f]+$/.test(clean)) return NaN;
+        return parseInt(clean, 16);
+      }
+
+      function decimalFromInput(str) {
+        let clean = str.trim().replace(/[^\d-]/g, '');
+        if (clean === '' || clean === '-') return NaN;
+        let num = Number(clean);
+        return isNaN(num) ? NaN : num;
+      }
+
+      function fmt2(n) {
+        if (n < 0) return '-' + Math.abs(n).toString().padStart(2, '0');
+        return n.toString().padStart(2, '0');
+      }
+
+      function ajouterHeureFinale(heureStr) {
+        if (emptyMsg && emptyMsg.parentNode === historiqueContainer) {
+          historiqueContainer.innerHTML = '';
+        }
+        const item = document.createElement('div');
+        item.className = 'historique-item';
+        const timeSpan = document.createElement('span');
+        timeSpan.className = 'historique-time';
+        timeSpan.textContent = heureStr;
+        item.appendChild(timeSpan);
+        historiqueContainer.appendChild(item);
+        historiqueContainer.scrollTop = historiqueContainer.scrollHeight;
+      }
+
+      function effectuerCalcul() {
+        // Heure départ
+        let departStr = departInput.value.trim();
+        let hh = 21, mm = 47, ss = 32;
+        const match = departStr.match(/^(\d{1,2})[:\s-]?(\d{1,2})[:\s-]?(\d{1,2})$/);
+        if (match) {
+          hh = parseInt(match[1], 10) || 0;
+          mm = parseInt(match[2], 10) || 0;
+          ss = parseInt(match[3], 10) || 0;
+        } else {
+          const chiffres = departStr.replace(/\D/g, '');
+          if (chiffres.length >= 6) {
+            hh = parseInt(chiffres.substring(0,2), 10);
+            mm = parseInt(chiffres.substring(2,4), 10);
+            ss = parseInt(chiffres.substring(4,6), 10);
+          }
+        }
+
+        let valHex = hexToDecimal(champ1.value);
+        if (isNaN(valHex)) valHex = 0;
+        let val2 = decimalFromInput(champ2.value);
+        if (isNaN(val2)) val2 = 0;
+        let val3 = decimalFromInput(champ3.value);
+        if (isNaN(val3)) val3 = 0;
+
+        let diff = Math.abs(valHex - val2);
+        let minutesFinales = mm + diff;
+        let secondesFinales = val3;
+        let heuresFinales = hh;
+
+        finalH.textContent = fmt2(heuresFinales);
+        finalM.textContent = fmt2(minutesFinales);
+        finalS.textContent = fmt2(secondesFinales);
+
+        let heureFinaleStr = `${fmt2(heuresFinales)}:${fmt2(minutesFinales)}:${fmt2(secondesFinales)}`;
+        ajouterHeureFinale(heureFinaleStr);
+      }
+
+      calculBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        effectuerCalcul();
+      });
+
+      allInputs.forEach(inp => {
+        inp.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            effectuerCalcul();
+          }
+        });
+      });
+
+      // Initialisation : s'assurer que tous les inputs ont la classe default-value (déjà présente)
+      // Mais si un champ est modifié avant le chargement (impossible), on garde.
+      // On appelle un premier affichage sans historique
+      function initialDisplay() {
+        let departStr = departInput.value.trim();
+        let hh = 21, mm = 47, ss = 32;
+        const match = departStr.match(/^(\d{1,2})[:\s-]?(\d{1,2})[:\s-]?(\d{1,2})$/);
+        if (match) {
+          hh = parseInt(match[1], 10) || 0;
+          mm = parseInt(match[2], 10) || 0;
+          ss = parseInt(match[3], 10) || 0;
+        }
+        let v1 = hexToDecimal(champ1.value) || 0;
+        let v2 = decimalFromInput(champ2.value) || 0;
+        let v3 = decimalFromInput(champ3.value) || 0;
+        let diff = Math.abs(v1 - v2);
+        finalH.textContent = fmt2(hh);
+        finalM.textContent = fmt2(mm + diff);
+        finalS.textContent = fmt2(v3);
+      }
+
+      window.addEventListener('load', initialDisplay);
+    })();
+  </script>
+</body>
+</html>
